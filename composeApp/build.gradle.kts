@@ -48,6 +48,12 @@ kotlin {
             implementation(libs.composeImageLoader)
             implementation(libs.napier)
             implementation(libs.kotlinx.coroutines.core)
+            // Http requests
+            implementation("com.squareup.retrofit2:retrofit:2.9.0")
+            implementation("com.squareup.retrofit2:adapter-rxjava2:2.9.0")
+            implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+            implementation("com.squareup.retrofit2:converter-scalars:2.1.0")
+            implementation("com.squareup.okhttp3:logging-interceptor:3.9.1")
         }
 
         commonTest.dependencies {
@@ -61,6 +67,12 @@ kotlin {
             implementation(compose.uiTooling)
             implementation(libs.androidx.activityCompose)
             implementation(libs.kotlinx.coroutines.android)
+            // Http requests
+            implementation("com.squareup.retrofit2:retrofit:2.9.0")
+            implementation("com.squareup.retrofit2:adapter-rxjava2:2.9.0")
+            implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+            implementation("com.squareup.retrofit2:converter-scalars:2.1.0")
+            implementation("com.squareup.okhttp3:logging-interceptor:3.9.1")
         }
 
         jvmMain.dependencies {
