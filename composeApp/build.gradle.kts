@@ -123,6 +123,9 @@ android {
         kotlinCompilerExtensionVersion = "1.5.11"
     }
 }
+dependencies {
+    implementation(libs.play.services.wallet)
+}
 
 compose.desktop {
     application {

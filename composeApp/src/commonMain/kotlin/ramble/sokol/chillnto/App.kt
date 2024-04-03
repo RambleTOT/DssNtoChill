@@ -2,25 +2,38 @@ package org.company.app
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.raspberrypiserver.RetrofitHelper
 import dssntochill.composeapp.generated.resources.IndieFlower_Regular
+import dssntochill.composeapp.generated.resources.LabGrotesque_Medium
+import dssntochill.composeapp.generated.resources.LabGrotesque_Regular
 import dssntochill.composeapp.generated.resources.Res
 import dssntochill.composeapp.generated.resources.ic_cyclone
 import dssntochill.composeapp.generated.resources.ic_rotate_right
+import dssntochill.composeapp.generated.resources.icon_loader
+import dssntochill.composeapp.generated.resources.icon_main
+import dssntochill.composeapp.generated.resources.image_loader
 import dssntochill.composeapp.generated.resources.run
-import dssntochill.composeapp.generated.resources.stop
+import dssntochill.composeapp.generated.resources.title_one
+import dssntochill.composeapp.generated.resources.title_two
 import io.github.aakira.napier.Napier.d
 import io.github.aakira.napier.Napier.i
 import org.jetbrains.compose.resources.Font
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import ramble.sokol.chillnto.theme.AppTheme
@@ -41,59 +54,123 @@ internal fun App() = AppTheme {
         modifier = Modifier
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.safeDrawing)
-            .padding(16.dp),
+            .padding(top = 40.dp, bottom = 40.dp, start = 40.dp, end = 40.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = s.value,
-            fontFamily = FontFamily(Font(Res.font.IndieFlower_Regular)),
-            style = MaterialTheme.typography.displayLarge
-        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ){
+
+            Text(
+                stringResource(Res.string.title_one),
+                style = TextStyle(
+                    fontSize = 40.sp,
+                    lineHeight = 16.sp,
+                    fontFamily = FontFamily(Font(Res.font.LabGrotesque_Regular)),
+                    fontWeight = FontWeight(700),
+                    color = Color(0xFF222222),
+                )
+            )
+
+            Text(
+                stringResource(Res.string.title_two),
+                style = TextStyle(
+                    fontSize = 40.sp,
+                    lineHeight = 16.sp,
+                    fontFamily = FontFamily(Font(Res.font.LabGrotesque_Regular)),
+                    fontWeight = FontWeight(700),
+                    color = Color(0xFFFF9A42),
+                )
+            )
+
+        }
 
         val transition = rememberInfiniteTransition()
         val rotate by transition.animateFloat(
             initialValue = 0f,
             targetValue = 360f,
             animationSpec = infiniteRepeatable(
-                animation = tween(1000, easing = LinearEasing)
+                animation = tween(2000, easing = LinearEasing)
             )
         )
 
-        if (!isAnimate.value){
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ){
+
+                if (isAnimate.value) {
+
+                    Image(
+                        painter = painterResource(Res.drawable.image_loader),
+                        modifier = Modifier
+                            .size(350.dp)
+                            .padding(16.dp)
+                            .run { if (isAnimate.value) rotate(rotate) else this },
+                        contentDescription = null
+                    )
+
+                }
+
+                Image(
+                    modifier = Modifier
+                        .size(200.dp)
+                        .padding(16.dp),
+                    imageVector = vectorResource(Res.drawable.icon_main),
+                    colorFilter = ColorFilter.tint(Color(0xFFF8A65D)),
+                    contentDescription = null
+                )
+            }
+
             Text(
                 text = centerText.value,
-                fontFamily = FontFamily(Font(Res.font.IndieFlower_Regular)),
-                style = MaterialTheme.typography.displayLarge
-            )
-        }else{
-            Image(
-                modifier = Modifier
-                    .size(250.dp)
-                    .padding(16.dp)
-                    .run { if (isAnimate.value) rotate(rotate) else this },
-                imageVector = vectorResource(Res.drawable.ic_cyclone),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
-                contentDescription = null
+                style = TextStyle(
+                    fontSize = 40.sp,
+                    lineHeight = 16.sp,
+                    fontFamily = FontFamily(Font(Res.font.LabGrotesque_Regular)),
+                    fontWeight = FontWeight(600),
+                    color = if (!isAnimate.value) Color(0xFF222222) else Color(0xFFFFFFFF),
+                )
             )
         }
 
 
         if (!isAnimate.value){
-            ElevatedButton(
+            Button(
                 modifier = Modifier
                     .padding(horizontal = 8.dp, vertical = 4.dp)
-                    .widthIn(min = 350.dp)
-                    .heightIn(min = 70.dp),
+                    .width(415.dp)
+                    .heightIn(min = 55.dp)
+                    .background(color = Color(0xFFFF9A42), shape = RoundedCornerShape(size = 12.dp)),
                 onClick = {
                     isAnimate.value = !isAnimate.value
                     request()
                 },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFFF9A42)),
                 content = {
-                    Icon(vectorResource(Res.drawable.ic_rotate_right), contentDescription = null)
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                     Text(
-                        stringResource(if (isAnimate.value) Res.string.stop else Res.string.run)
+                        stringResource(Res.string.run),
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                            lineHeight = 16.sp,
+                            fontFamily = FontFamily(Font(Res.font.LabGrotesque_Regular)),
+                            fontWeight = FontWeight(700),
+                            color = Color(0xFFFFFFFF),
+                            )
+
                     )
                 }
             )
@@ -118,6 +195,8 @@ internal fun App() = AppTheme {
 //        )
 
     }
+
+    Spacer(modifier = Modifier.padding(bottom = 80.dp))
 
 }
 
