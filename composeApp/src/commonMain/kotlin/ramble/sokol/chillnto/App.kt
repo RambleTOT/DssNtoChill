@@ -12,9 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.raspberrypiserver.RetrofitHelper
@@ -22,6 +24,7 @@ import dssntochill.composeapp.generated.resources.IndieFlower_Regular
 import dssntochill.composeapp.generated.resources.LabGrotesque_Medium
 import dssntochill.composeapp.generated.resources.LabGrotesque_Regular
 import dssntochill.composeapp.generated.resources.Res
+import dssntochill.composeapp.generated.resources.graph_test
 import dssntochill.composeapp.generated.resources.ic_cyclone
 import dssntochill.composeapp.generated.resources.ic_rotate_right
 import dssntochill.composeapp.generated.resources.icon_loader
@@ -46,6 +49,7 @@ import java.util.logging.Logger
 private var s = mutableStateOf("На чиле")
 private var centerText = mutableStateOf("Запустите программу для записи звуки и проведения анализа")
 private var isAnimate = mutableStateOf(false)
+private var isSuccesfull = mutableStateOf(false)
 
 @Composable
 internal fun App() = AppTheme {
@@ -64,7 +68,7 @@ internal fun App() = AppTheme {
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
-        ){
+        ) {
 
             Text(
                 stringResource(Res.string.title_one),
@@ -99,52 +103,318 @@ internal fun App() = AppTheme {
             )
         )
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
+        if (isSuccesfull.value) {
 
-            Box(
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ){
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
 
-                if (isAnimate.value) {
+                ){
 
-                    Image(
-                        painter = painterResource(Res.drawable.image_loader),
-                        modifier = Modifier
-                            .size(350.dp)
-                            .padding(16.dp)
-                            .run { if (isAnimate.value) rotate(rotate) else this },
-                        contentDescription = null
-                    )
+                Image(
+                    painter = painterResource(Res.drawable.graph_test),
+                    modifier = Modifier.fillMaxWidth(0.5f).padding(start = 20.dp, end = 40.dp),
+                    contentDescription = null
+                )
+
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth(0.5f)
+                                .background(color = Color(0xFFF8F8FA), shape = RoundedCornerShape(size = 15.dp))
+                                .padding(vertical = 20.dp, horizontal = 15.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+
+                            Text(
+                                text = "Максимальное значение",
+                                style = TextStyle(
+                                    fontSize = 18.sp,
+                                    lineHeight = 16.sp,
+                                    fontFamily = FontFamily(Font(Res.font.LabGrotesque_Regular)),
+                                    fontWeight = FontWeight(600),
+                                    color = Color(0xFFB3B3B3),
+                                ),
+                                textAlign = TextAlign.Center
+                            )
+
+                            Text(
+                                text = "100",
+                                style = TextStyle(
+                                    fontSize = 28.sp,
+                                    lineHeight = 16.sp,
+                                    fontFamily = FontFamily(Font(Res.font.LabGrotesque_Regular)),
+                                    fontWeight = FontWeight(600),
+                                    color = Color(0xFFF8A65D),
+                                ),
+                                textAlign = TextAlign.Center
+                            )
+
+                        }
+
+                        Spacer(modifier = Modifier.padding(horizontal = 25.dp))
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(color = Color(0xFFF8F8FA), shape = RoundedCornerShape(size = 15.dp))
+                                .padding(vertical = 20.dp, horizontal = 15.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+
+                            Text(
+                                text = "Минимальное значение",
+                                style = TextStyle(
+                                    fontSize = 18.sp,
+                                    lineHeight = 16.sp,
+                                    fontFamily = FontFamily(Font(Res.font.LabGrotesque_Regular)),
+                                    fontWeight = FontWeight(600),
+                                    color = Color(0xFFB3B3B3),
+                                ),
+                                textAlign = TextAlign.Center
+                            )
+
+                            Text(
+                                text = "100",
+                                style = TextStyle(
+                                    fontSize = 28.sp,
+                                    lineHeight = 16.sp,
+                                    fontFamily = FontFamily(Font(Res.font.LabGrotesque_Regular)),
+                                    fontWeight = FontWeight(600),
+                                    color = Color(0xFFF8A65D),
+                                ),
+                                textAlign = TextAlign.Center
+                            )
+
+                        }
+
+                    }
+
+                    Spacer(modifier = Modifier.padding(top = 50.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth(0.5f)
+                                .background(color = Color(0xFFF8F8FA), shape = RoundedCornerShape(size = 15.dp))
+                                .padding(vertical = 20.dp, horizontal = 15.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+
+                            Text(
+                                text = "Медианное значение",
+                                style = TextStyle(
+                                    fontSize = 18.sp,
+                                    lineHeight = 16.sp,
+                                    fontFamily = FontFamily(Font(Res.font.LabGrotesque_Regular)),
+                                    fontWeight = FontWeight(600),
+                                    color = Color(0xFFB3B3B3),
+                                ),
+                                textAlign = TextAlign.Center
+                            )
+
+                            Text(
+                                text = "100",
+                                style = TextStyle(
+                                    fontSize = 28.sp,
+                                    lineHeight = 16.sp,
+                                    fontFamily = FontFamily(Font(Res.font.LabGrotesque_Regular)),
+                                    fontWeight = FontWeight(600),
+                                    color = Color(0xFFF8A65D),
+                                ),
+                                textAlign = TextAlign.Center
+                            )
+
+                        }
+
+                        Spacer(modifier = Modifier.padding(horizontal = 25.dp))
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(color = Color(0xFFF8F8FA), shape = RoundedCornerShape(size = 15.dp))
+                                .padding(vertical = 20.dp, horizontal = 15.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+
+                            Text(
+                                text = "Среднее значение",
+                                style = TextStyle(
+                                    fontSize = 18.sp,
+                                    lineHeight = 16.sp,
+                                    fontFamily = FontFamily(Font(Res.font.LabGrotesque_Regular)),
+                                    fontWeight = FontWeight(600),
+                                    color = Color(0xFFB3B3B3),
+                                ),
+                                textAlign = TextAlign.Center
+                            )
+
+                            Text(
+                                text = "100",
+                                style = TextStyle(
+                                    fontSize = 28.sp,
+                                    lineHeight = 16.sp,
+                                    fontFamily = FontFamily(Font(Res.font.LabGrotesque_Regular)),
+                                    fontWeight = FontWeight(600),
+                                    color = Color(0xFFF8A65D),
+                                ),
+                                textAlign = TextAlign.Center
+                            )
+
+                        }
+
+                    }
+
+                    Spacer(modifier = Modifier.padding(top = 50.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth(0.5f)
+                                .background(color = Color(0xFFF8F8FA), shape = RoundedCornerShape(size = 15.dp))
+                                .padding(vertical = 20.dp, horizontal = 15.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+
+                            Text(
+                                text = "Шум в дБ",
+                                style = TextStyle(
+                                    fontSize = 18.sp,
+                                    lineHeight = 16.sp,
+                                    fontFamily = FontFamily(Font(Res.font.LabGrotesque_Regular)),
+                                    fontWeight = FontWeight(600),
+                                    color = Color(0xFFB3B3B3),
+                                ),
+                                textAlign = TextAlign.Center
+                            )
+
+                            Text(
+                                text = "100",
+                                style = TextStyle(
+                                    fontSize = 28.sp,
+                                    lineHeight = 16.sp,
+                                    fontFamily = FontFamily(Font(Res.font.LabGrotesque_Regular)),
+                                    fontWeight = FontWeight(600),
+                                    color = Color(0xFFF8A65D),
+                                ),
+                                textAlign = TextAlign.Center
+                            )
+
+                        }
+
+                        Spacer(modifier = Modifier.padding(horizontal = 25.dp))
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(color = Color(0xFFF8F8FA), shape = RoundedCornerShape(size = 15.dp))
+                                .padding(vertical = 20.dp, horizontal = 15.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+
+                            Text(
+                                text = "Стандартное квадратичное отклонение",
+                                style = TextStyle(
+                                    fontSize = 18.sp,
+                                    lineHeight = 16.sp,
+                                    fontFamily = FontFamily(Font(Res.font.LabGrotesque_Regular)),
+                                    fontWeight = FontWeight(600),
+                                    color = Color(0xFFB3B3B3),
+                                ),
+                                textAlign = TextAlign.Center
+                            )
+
+                            Text(
+                                text = "100",
+                                style = TextStyle(
+                                    fontSize = 28.sp,
+                                    lineHeight = 16.sp,
+                                    fontFamily = FontFamily(Font(Res.font.LabGrotesque_Regular)),
+                                    fontWeight = FontWeight(600),
+                                    color = Color(0xFFF8A65D),
+                                ),
+                                textAlign = TextAlign.Center
+                            )
+
+                        }
+
+                    }
 
                 }
 
-                Image(
-                    modifier = Modifier
-                        .size(200.dp)
-                        .padding(16.dp),
-                    imageVector = vectorResource(Res.drawable.icon_main),
-                    colorFilter = ColorFilter.tint(Color(0xFFF8A65D)),
-                    contentDescription = null
-                )
             }
 
-            Text(
-                text = centerText.value,
-                style = TextStyle(
-                    fontSize = 40.sp,
-                    lineHeight = 16.sp,
-                    fontFamily = FontFamily(Font(Res.font.LabGrotesque_Regular)),
-                    fontWeight = FontWeight(600),
-                    color = if (!isAnimate.value) Color(0xFF222222) else Color(0xFFFFFFFF),
+        } else {
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+
+                    if (isAnimate.value) {
+
+                        Image(
+                            painter = painterResource(Res.drawable.image_loader),
+                            modifier = Modifier
+                                .size(350.dp)
+                                .padding(16.dp)
+                                .run { if (isAnimate.value) rotate(rotate) else this },
+                            contentDescription = null
+                        )
+
+                    }
+
+                    Image(
+                        modifier = Modifier
+                            .size(200.dp)
+                            .padding(16.dp),
+                        imageVector = vectorResource(Res.drawable.icon_main),
+                        colorFilter = ColorFilter.tint(Color(0xFFF8A65D)),
+                        contentDescription = null
+                    )
+                }
+
+                Text(
+                    text = centerText.value,
+                    style = TextStyle(
+                        fontSize = 40.sp,
+                        lineHeight = 16.sp,
+                        fontFamily = FontFamily(Font(Res.font.LabGrotesque_Regular)),
+                        fontWeight = FontWeight(600),
+                        color = if (!isAnimate.value) Color(0xFF222222) else Color(0xFFFFFFFF),
+                    )
                 )
-            )
-        }
+            }
+    }
 
 
         if (!isAnimate.value){
@@ -216,6 +486,7 @@ fun request(){
 //                    transaction.commit()
                 centerText.value = response.toString()
                 isAnimate.value = !isAnimate.value
+                isSuccesfull.value = !isSuccesfull.value
             }else{
                 //binding!!.textErrorLogin.visibility = View.VISIBLE
                 centerText.value = "No"
