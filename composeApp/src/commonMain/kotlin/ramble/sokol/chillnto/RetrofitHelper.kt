@@ -13,16 +13,14 @@ class RetrofitHelper {
 
     }
 
-    private val httpClient: OkHttpClient by lazy {
-        OkHttpClient.Builder()
-            .pingInterval(20, TimeUnit.SECONDS)
-            .build()
-    }
+    var client = OkHttpClient.Builder()
+        .connectTimeout(100, TimeUnit.SECONDS)
+        .readTimeout(100, TimeUnit.SECONDS).build()
 
     fun getApi() : ApiMethod {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .client(httpClient)
+            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ApiMethod::class.java)

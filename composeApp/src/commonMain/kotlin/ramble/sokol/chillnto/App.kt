@@ -45,11 +45,20 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.logging.LogManager
 import java.util.logging.Logger
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 private var s = mutableStateOf("На чиле")
 private var centerText = mutableStateOf("Запустите программу для записи звуки и проведения анализа")
 private var isAnimate = mutableStateOf(false)
 private var isSuccesfull = mutableStateOf(false)
+private var min = mutableStateOf("")
+private var max = mutableStateOf("")
+private var mean = mutableStateOf("")
+private var median = mutableStateOf("")
+private var std = mutableStateOf("")
+private var noise = mutableStateOf("")
+private var photo = mutableStateOf("")
 
 @Composable
 internal fun App() = AppTheme {
@@ -112,11 +121,32 @@ internal fun App() = AppTheme {
 
                 ){
 
-                Image(
-                    painter = painterResource(Res.drawable.graph_test),
-                    modifier = Modifier.fillMaxWidth(0.5f).padding(start = 20.dp, end = 40.dp),
-                    contentDescription = null
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f)
+                        .padding(start = 20.dp, end = 40.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
+
+                    Text(
+                        text = "График амплитудного спектра",
+                        style = TextStyle(
+                            fontSize = 22.sp,
+                            lineHeight = 16.sp,
+                            fontFamily = FontFamily(Font(Res.font.LabGrotesque_Regular)),
+                            fontWeight = FontWeight(700),
+                            color = Color(0xFF191919),
+                        ),
+                        textAlign = TextAlign.Center
+                    )
+
+                    Image(
+                        painter = if (photo.value == "") painterResource(Res.drawable.graph_test) else painterResource(Res.drawable.graph_test),
+                        modifier = Modifier.fillMaxWidth(),
+                        contentDescription = null
+                    )
+                }
 
                 Column(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
@@ -151,7 +181,7 @@ internal fun App() = AppTheme {
                             )
 
                             Text(
-                                text = "100",
+                                text = max.value,
                                 style = TextStyle(
                                     fontSize = 28.sp,
                                     lineHeight = 16.sp,
@@ -187,7 +217,7 @@ internal fun App() = AppTheme {
                             )
 
                             Text(
-                                text = "100",
+                                text = min.value,
                                 style = TextStyle(
                                     fontSize = 28.sp,
                                     lineHeight = 16.sp,
@@ -231,7 +261,7 @@ internal fun App() = AppTheme {
                             )
 
                             Text(
-                                text = "100",
+                                text = median.value,
                                 style = TextStyle(
                                     fontSize = 28.sp,
                                     lineHeight = 16.sp,
@@ -267,7 +297,7 @@ internal fun App() = AppTheme {
                             )
 
                             Text(
-                                text = "100",
+                                text = mean.value,
                                 style = TextStyle(
                                     fontSize = 28.sp,
                                     lineHeight = 16.sp,
@@ -311,7 +341,7 @@ internal fun App() = AppTheme {
                             )
 
                             Text(
-                                text = "100",
+                                text = noise.value,
                                 style = TextStyle(
                                     fontSize = 28.sp,
                                     lineHeight = 16.sp,
@@ -347,7 +377,7 @@ internal fun App() = AppTheme {
                             )
 
                             Text(
-                                text = "100",
+                                text = std.value,
                                 style = TextStyle(
                                     fontSize = 28.sp,
                                     lineHeight = 16.sp,
@@ -470,6 +500,7 @@ internal fun App() = AppTheme {
 
 }
 
+@OptIn(ExperimentalEncodingApi::class)
 fun request(){
     RetrofitHelper().getApi().loginUser().enqueue(object :
         Callback<GetData> {
@@ -478,18 +509,19 @@ fun request(){
             response: Response<GetData>
         ) {
             if (response.isSuccessful) {
-//                    tokenManager.saveToken(response.body()!!.token.toString())
-//                    firstEntryManager.saveFirstEntry(true)
-//                    val transaction = activity!!.supportFragmentManager.beginTransaction()
-//                    transaction.replace(R.id.linear_fragment, BottomNavBarFragment())
-//                    transaction.disallowAddToBackStack()
-//                    transaction.commit()
+                val body = response.body()
                 centerText.value = response.toString()
                 isAnimate.value = !isAnimate.value
                 isSuccesfull.value = !isSuccesfull.value
+                min.value = body!!.min.toString()
+                max.value = body.max.toString()
+                mean.value = body.mean.toString()
+                median.value = body.median.toString()
+                std.value = body.std.toString()
+                noise.value = body.noise.toString()
             }else{
                 //binding!!.textErrorLogin.visibility = View.VISIBLE
-                centerText.value = "No"
+                centerText.value = response.toString()
                 isAnimate.value = !isAnimate.value
             }
         }
