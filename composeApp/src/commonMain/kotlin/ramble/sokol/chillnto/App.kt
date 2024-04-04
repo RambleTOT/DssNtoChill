@@ -64,6 +64,13 @@ private var median = mutableStateOf("")
 private var std = mutableStateOf("")
 private var noise = mutableStateOf("")
 private var photo = mutableStateOf("")
+private var min2 = mutableStateOf("")
+private var max2 = mutableStateOf("")
+private var mean2 = mutableStateOf("")
+private var median2 = mutableStateOf("")
+private var std2 = mutableStateOf("")
+private var noise2 = mutableStateOf("")
+private var photo2 = mutableStateOf("")
 
 @Composable
 internal fun App() = AppTheme {
@@ -478,7 +485,7 @@ internal fun App() = AppTheme {
                             ),
                             textAlign = TextAlign.Center
                         )
-                        if (photo.value == "") {
+                        if (photo2.value == "") {
                             Image(
                                 painter = painterResource(Res.drawable.graph_test),
                                 modifier = Modifier.fillMaxWidth(),
@@ -486,7 +493,7 @@ internal fun App() = AppTheme {
                             )
                         }else{
 
-                            val decodedBytes = java.util.Base64.getDecoder().decode(photo.value)
+                            val decodedBytes = java.util.Base64.getDecoder().decode(photo2.value)
                             val image = org.jetbrains.skia.Image.makeFromEncoded(decodedBytes)
 
                             Image(
@@ -530,7 +537,7 @@ internal fun App() = AppTheme {
                                 )
 
                                 Text(
-                                    text = max.value,
+                                    text = max2.value,
                                     style = TextStyle(
                                         fontSize = 28.sp,
                                         lineHeight = 16.sp,
@@ -566,7 +573,7 @@ internal fun App() = AppTheme {
                                 )
 
                                 Text(
-                                    text = min.value,
+                                    text = min2.value,
                                     style = TextStyle(
                                         fontSize = 28.sp,
                                         lineHeight = 16.sp,
@@ -610,7 +617,7 @@ internal fun App() = AppTheme {
                                 )
 
                                 Text(
-                                    text = median.value,
+                                    text = median2.value,
                                     style = TextStyle(
                                         fontSize = 28.sp,
                                         lineHeight = 16.sp,
@@ -646,7 +653,7 @@ internal fun App() = AppTheme {
                                 )
 
                                 Text(
-                                    text = mean.value,
+                                    text = mean2.value,
                                     style = TextStyle(
                                         fontSize = 28.sp,
                                         lineHeight = 16.sp,
@@ -690,7 +697,7 @@ internal fun App() = AppTheme {
                                 )
 
                                 Text(
-                                    text = noise.value,
+                                    text = noise2.value,
                                     style = TextStyle(
                                         fontSize = 28.sp,
                                         lineHeight = 16.sp,
@@ -726,7 +733,7 @@ internal fun App() = AppTheme {
                                 )
 
                                 Text(
-                                    text = std.value,
+                                    text = std2.value,
                                     style = TextStyle(
                                         fontSize = 28.sp,
                                         lineHeight = 16.sp,
@@ -867,13 +874,21 @@ fun request(){
                 centerText.value = response.toString()
                 isAnimate.value = !isAnimate.value
                 isSuccesfull.value = !isSuccesfull.value
-                min.value = body!!.min.toString()
-                max.value = body.max.toString()
-                mean.value = body.mean.toString()
-                median.value = body.median.toString()
-                std.value = body.std.toString()
-                noise.value = body.noise.toString()
-                photo.value = body.graph.toString()
+                min.value = body!!.min!![0]
+                max.value = body.max!![0]
+                mean.value = body.mean!![0]
+                median.value = body.median!![0]
+                std.value = body.std!![0]
+                noise.value = body.noise!![0]
+                photo.value = body.graph!![0]
+
+                min2.value = body.min!![1]
+                max2.value = body.max!![1]
+                mean2.value = body.mean!![1]
+                median2.value = body.median!![1]
+                std2.value = body.std!![1]
+                noise2.value = body.noise!![1]
+                photo2.value = body.graph!![1]
             }else{
                 //binding!!.textErrorLogin.visibility = View.VISIBLE
                 centerText.value = response.toString()

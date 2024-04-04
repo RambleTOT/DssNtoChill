@@ -4,17 +4,17 @@ import com.google.gson.annotations.SerializedName
 
 data class GetData(
     @SerializedName("graph")
-    val graph: String?,
+    val graph: List<String>?,
     @SerializedName("max")
-    val max: String?,
+    val max: List<String>?,
     @SerializedName("min")
-    val min: String?,
+    val min: List<String>?,
     @SerializedName("mean")
-    val mean: String?,
+    val mean: List<String>?,
     @SerializedName("median")
-    val median: String?,
+    val median: List<String>?,
     @SerializedName("noise")
-    val noise: String?,
+    val noise: List<String>?,
     @SerializedName("std")
-    val std: String?,
+    val std: List<String>?,
 )
