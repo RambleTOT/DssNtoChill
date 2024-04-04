@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -35,6 +37,7 @@ import dssntochill.composeapp.generated.resources.title_one
 import dssntochill.composeapp.generated.resources.title_two
 import io.github.aakira.napier.Napier.d
 import io.github.aakira.napier.Napier.i
+import kotlinx.coroutines.CoroutineStart
 import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -140,12 +143,23 @@ internal fun App() = AppTheme {
                         ),
                         textAlign = TextAlign.Center
                     )
+                    if (photo.value == "") {
+                        Image(
+                            painter = painterResource(Res.drawable.graph_test),
+                            modifier = Modifier.fillMaxWidth(),
+                            contentDescription = null
+                        )
+                    }else{
 
-                    Image(
-                        painter = if (photo.value == "") painterResource(Res.drawable.graph_test) else painterResource(Res.drawable.graph_test),
-                        modifier = Modifier.fillMaxWidth(),
-                        contentDescription = null
-                    )
+                        val decodedBytes = java.util.Base64.getDecoder().decode(photo.value)
+                        val image = org.jetbrains.skia.Image.makeFromEncoded(decodedBytes)
+
+                        Image(
+                            bitmap = image.asImageBitmap(),
+                            modifier = Modifier.fillMaxWidth(),
+                            contentDescription = null
+                        )
+                    }
                 }
 
                 Column(
@@ -456,6 +470,7 @@ internal fun App() = AppTheme {
                     .background(color = Color(0xFFFF9A42), shape = RoundedCornerShape(size = 12.dp)),
                 onClick = {
                     isAnimate.value = !isAnimate.value
+                    isSuccesfull.value = false
                     request()
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -519,6 +534,7 @@ fun request(){
                 median.value = body.median.toString()
                 std.value = body.std.toString()
                 noise.value = body.noise.toString()
+                photo.value = body.graph.toString()
             }else{
                 //binding!!.textErrorLogin.visibility = View.VISIBLE
                 centerText.value = response.toString()

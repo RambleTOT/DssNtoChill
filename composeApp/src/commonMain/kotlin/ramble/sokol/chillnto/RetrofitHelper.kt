@@ -14,8 +14,8 @@ class RetrofitHelper {
     }
 
     var client = OkHttpClient.Builder()
-        .connectTimeout(100, TimeUnit.SECONDS)
-        .readTimeout(100, TimeUnit.SECONDS).build()
+        .connectTimeout(200, TimeUnit.SECONDS)
+        .readTimeout(200, TimeUnit.SECONDS).build()
 
     fun getApi() : ApiMethod {
         return Retrofit.Builder()
